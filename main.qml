@@ -54,10 +54,13 @@ Window {
 //        }
         Rectangle{
             height: 50
-            SplitView.minimumHeight: parent.height*0.025
+            SplitView.minimumHeight: parent.height*0.05
             SplitView.maximumHeight: parent.height*0.05
-            Label{
-                text: "ChatBot"
+            Image {
+                id: main_icon
+                source: "qrc:/Image/title.png"
+                height: 40
+                width: 120
             }
         }
         Rectangle{ // box to post message
@@ -147,7 +150,7 @@ Window {
                             if(true){ //M115
                                 if(text_area.text.length<1)
                                     return;
-                                talk_model.appendText("B","A",text_area.text);
+                                talk_model.appendText("B","A",text_area.text+" ");
                             }break;
                         case "audio":
                             if(true){
@@ -166,7 +169,7 @@ Window {
                             if(true){ //M115
                                 if(text_area.text.length<1)
                                     return;
-                                talk_model.appendText("B","B",text_area.text);
+                                talk_model.appendText("B","B",text_area.text+" ");
                             }break;
                         case "audio":
                             if(true){

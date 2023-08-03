@@ -21,7 +21,7 @@ Item {
 
     default property alias contentItems: content_item.children
 
-    Item{
+    Item{  // left for chatgpt
         id: left_item
         height: control.height
         width: control.leftWidth
@@ -31,7 +31,7 @@ Item {
             width: control.profileHeight
             height: control.profileHeight
             anchors.horizontalCenter: parent.horizontalCenter
-            source: "qrc:/Image/profile_48_gray.png"
+            source: "qrc:/Image/ChatGPT_48_alpha.png"
             //fillMode: Image.PreserveAspectFit
         }
     }
@@ -43,7 +43,7 @@ Item {
         spacing: 6
         //layoutDirection: control.isUser?Qt.RightToLeft:Qt.LeftToRight
     }
-    Item {
+    Item { // right for human
         id: right_item
         height: control.height
         width: control.rightWidth

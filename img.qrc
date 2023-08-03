@@ -6,5 +6,8 @@
         <file>Image/warn_20_red.png</file>
         <file>Image/profile_48_gray.png</file>
         <file>Image/audio.wav</file>
+        <file>Image/ChatGPT_48_alpha.png</file>
+        <file>Image/main_ico.jpg</file>
+        <file>Image/title.png</file>
     </qresource>
 </RCC>
