@@ -11,3 +11,4 @@ llama.android
 2. setup your QtCreator in `Preferences -> Device -> Android` like this: ![img](doc/qt_android_toolkits.png)
 3. open `*.pro` file with QtCreator, select `Desktop Qt 6.*.* GCC 64bit` and `Android Qt 6.*.* Clang x86_64` as build toolkits.
 4. use the buttons bottom-left to start build or debug.![img](doc/the_build_button.png)
+5. the app looks like:![img](doc/app.png)
