@@ -1,5 +1,8 @@
 llama.android
 ================
+## introduction
+1. Try to build llama.cpp into android.
+2. all cpp.
 
 ## reference
 1. [C++ Qt 实现微信聊天界面](https://blog.csdn.net/yao_hou/article/details/122281766)
