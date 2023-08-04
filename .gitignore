@@ -1,4 +1,4 @@
 /Bin
 /build
-
+/cmake-build
 *.user
