@@ -5,7 +5,7 @@ import QtQuick.Controls
 import QtQuick.Layouts
 //import QtQuick.Controls 1.4 as Ctrl1
 import QtMultimedia
-import TalkModel 1.0
+import ChatBot 1.0
 
 Window {
     visible: true
@@ -58,7 +58,7 @@ Window {
             SplitView.maximumHeight: parent.height*0.05
             Image {
                 id: main_icon
-                source: "qrc:/Image/title.png"
+                source: "qrc:/image/title.png"
                 height: 40
                 width: 120
             }

@@ -1,10 +1,9 @@
 import QtQuick
 import QtMultimedia
 
-import TalkModel 1.0
+import ChatBot 1.0
 
 //音频信息delegate
-//龚建波 2021-3-29
 TalkItemBase {
     id: control
 
@@ -46,8 +45,8 @@ TalkItemBase {
                     anchors.verticalCenter: parent.verticalCenter
                     source: (audioPlayer.playbackState===MediaPlayer.PlayingState&&
                              audioPlayer.currentId===index)
-                            ?"qrc:/Image/audio_playing.gif"
-                            :"qrc:/Image/audio_20_play.png"
+                            ?"qrc:/image/audio_playing.gif"
+                            :"qrc:/image/audio_20_play.png"
                     rotation: control.isUser?180:0
                     //切换source后不会自动播放
                     onSourceChanged: playing=true
@@ -111,7 +110,7 @@ TalkItemBase {
             AnimatedImage{
                 anchors.centerIn: parent
                 visible: (model.status===TalkData.ParseOn)
-                source: "qrc:/Image/audio_loading.gif"
+                source: "qrc:/image/audio_loading.gif"
             }
 
             MouseArea{
@@ -152,12 +151,12 @@ TalkItemBase {
                 //有些情况下图片显示异常，设置透明度0.9解决了
                 opacity: 0.999
                 anchors.verticalCenter: parent.verticalCenter
-                source: "qrc:/Image/warn_20_red.png"
+                source: "qrc:/image/warn_20_red.png"
             }
 
             TalkLabel{
                 id: text_item
-                text: model.audio_text.length>0?model.audio_text:"       未识别到文字"
+                text: model.audio_text.length>0?model.audio_text:"       未识别到文字 "
                 width: Math.min(control.contentWidth,textWidth)
             }
         }

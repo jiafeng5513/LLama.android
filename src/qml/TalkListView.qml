@@ -2,7 +2,7 @@ import QtQuick
 import QtQuick.Controls
 import QtQuick.Layouts
 import QtMultimedia
-import TalkModel 1.0
+import ChatBot 1.0
 
 //聊天框ListView
 ListView {

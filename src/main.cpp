@@ -22,20 +22,20 @@ static const char *FileBaseName(const char *filename)
 int main(int argc, char *argv[])
 {
     qDebug()<<FileBaseName(__FILE__)<<__FUNCTION__<<__LINE__;
-    QCoreApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
+//    QCoreApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
 
     QGuiApplication app(argc, argv);
 
-    qmlRegisterType<TalkData>("TalkModel",1,0,"TalkData");
-    qmlRegisterType<TalkListModel>("TalkModel",1,0,"TalkListModel");
+    qmlRegisterType<TalkData>("ChatBot",1,0,"TalkData");
+    qmlRegisterType<TalkListModel>("ChatBot",1,0,"TalkListModel");
     QQmlApplicationEngine engine;
 
-    const QUrl url(QStringLiteral("qrc:/main.qml"));
+    const QUrl url(QStringLiteral("qrc:/qml/main.qml"));
     QObject::connect(&engine, &QQmlApplicationEngine::objectCreated,
-                     &app, [url](QObject *obj, const QUrl &objUrl) {
-        if (!obj && url == objUrl)
-            QCoreApplication::exit(-1);
-    }, Qt::QueuedConnection);
+        &app, [url](QObject *obj, const QUrl &objUrl) {
+            if (!obj && url == objUrl)
+                QCoreApplication::exit(-1);
+        }, Qt::QueuedConnection);
     engine.load(url);
 
     return app.exec();

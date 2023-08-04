@@ -1,0 +1,21 @@
+<RCC>
+    <qresource prefix="/qml">
+        <file alias="TalkListView.qml">qml/TalkListView.qml</file>
+        <file alias="TalkLabel.qml">qml/TalkLabel.qml</file>
+        <file alias="TalkItemText.qml">qml/TalkItemText.qml</file>
+        <file alias="TalkItemBase.qml">qml/TalkItemBase.qml</file>
+        <file alias="TalkItemAudio.qml">qml/TalkItemAudio.qml</file>
+        <file alias="main.qml">qml/main.qml</file>
+    </qresource>
+    <qresource prefix="/image">
+        <file alias="audio_20_play.png">image/audio_20_play.png</file>
+        <file alias="audio_loading.gif">image/audio_loading.gif</file>
+        <file alias="audio_playing.gif">image/audio_playing.gif</file>
+        <file alias="audio.wav">image/audio.wav</file>
+        <file alias="ChatGPT_48_alpha.png">image/ChatGPT_48_alpha.png</file>
+        <file alias="main_ico.jpg">image/main_ico.jpg</file>
+        <file alias="profile_48_gray.png">image/profile_48_gray.png</file>
+        <file alias="title.png">image/title.png</file>
+        <file alias="warn_20_red.png">image/warn_20_red.png</file>
+    </qresource>
+</RCC>

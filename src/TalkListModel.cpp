@@ -47,8 +47,8 @@ QVariant TalkListModel::data(const QModelIndex &index, int role) const
         TalkDataText *talk_data=static_cast<TalkDataText*>(item.get());
         return talk_data->text;
     }
-        //图片
-        //音频
+    //图片
+    //音频
     case Qt::UserRole+300:
     {
         TalkDataAudio *talk_data=static_cast<TalkDataAudio*>(item.get());
@@ -69,7 +69,7 @@ QVariant TalkListModel::data(const QModelIndex &index, int role) const
         TalkDataAudio *talk_data=static_cast<TalkDataAudio*>(item.get());
         return talk_data->durationStr();
     }
-        //视频
+    //视频
     }
     return QVariant();
 }
@@ -162,7 +162,7 @@ void TalkListModel::parseRow(int row)
         auto item=talkList.at(row);
         TalkDataAudio *talk_data=static_cast<TalkDataAudio*>(item.get());
         if(talk_data){
-            talk_data->text=(row%2)?"解析完成，啊实打实大苏打!":"";
+            talk_data->text=(row%2)?"解析完成(This is dummy message)! ":"";
             talk_data->status=TalkData::ParseSuccess;
             emit dataChanged(index(row,0),index(row,0));
         }

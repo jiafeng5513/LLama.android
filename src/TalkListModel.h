@@ -24,7 +24,7 @@ public:
                                 const QString &text);
     //测试发送语音
     Q_INVOKABLE void appendAudio(const QString &user,
-                                const QString &sender);
+                                 const QString &sender);
 
     //解析，如语音转文字，文档转换等
     Q_INVOKABLE void parseRow(int row);

@@ -31,7 +31,7 @@ Item {
             width: control.profileHeight
             height: control.profileHeight
             anchors.horizontalCenter: parent.horizontalCenter
-            source: "qrc:/Image/ChatGPT_48_alpha.png"
+            source: "qrc:/image/ChatGPT_48_alpha.png"
             //fillMode: Image.PreserveAspectFit
         }
     }
@@ -55,7 +55,7 @@ Item {
             width: control.profileHeight
             height: control.profileHeight
             anchors.horizontalCenter: parent.horizontalCenter
-            source: "qrc:/Image/profile_48_gray.png"
+            source: "qrc:/image/profile_48_gray.png"
             //fillMode: Image.PreserveAspectFit
         }
     }
