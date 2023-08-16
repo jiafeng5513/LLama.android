@@ -4,14 +4,28 @@ project(ChatBot VERSION 0.1 LANGUAGES CXX)
 
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-find_package(Qt6 6.4 REQUIRED COMPONENTS Quick)
-qt6_policy(SET QTP0001 NEW)
+find_package(Qt6 6.4 REQUIRED COMPONENTS Quick Widgets Core Multimedia)
+
+
 include_directories(src)
 
 file(GLOB CPP_HEADER_FILES "src/*.h")
 file(GLOB CPP_SRC_FILES "src/*.cpp")
 file(GLOB QML_FILES "src/qml/*.qml")
-file(GLOB QRC_FILES "src/*.qrc")
+
+IF (CMAKE_SYSTEM_NAME MATCHES "Linux")
+    MESSAGE(STATUS "current platform: Linux ")
+    file(GLOB QRC_FILES "src/resource.qrc")
+    qt6_policy(SET QTP0001 NEW)
+ELSEIF (CMAKE_SYSTEM_NAME MATCHES "Windows")
+    MESSAGE(STATUS "current platform: Windows")
+    set(QRC_FILES "src/resource.qrc")
+ELSEIF (CMAKE_SYSTEM_NAME MATCHES "Darwin")
+    MESSAGE(FATAL_ERROR "DO NOT support Mac OS X currently")
+ELSE ()
+    MESSAGE(FATAL_ERROR "other platform: ${CMAKE_SYSTEM_NAME}, only support linux and Windows")
+ENDIF (CMAKE_SYSTEM_NAME MATCHES "Linux")
+
 
 set(QML_RELATIVE_PATH_FILES)
 FOREACH(qml_abs_path ${QML_FILES})
