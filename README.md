@@ -16,4 +16,4 @@ llama.android
 3. open `*CMakeList.txt` file with QtCreator, select `Desktop Qt 6.*.* GCC 64bit` and `Android Qt 6.*.* Clang x86_64` as build toolkits, in the detail settings of the two toolkit, you can edit the output dir: ![img](doc/configure_project.png)
 4. after configuration done, you can see the project structure：![img](doc/project_view.png)
 5. use the buttons bottom-left to start build or debug.![img](doc/the_build_button.png)
-6. the app looks like:![img](doc/app.png)
+6. the app looks like:![img](doc/app.png) ![img](doc/app_setting.png)
