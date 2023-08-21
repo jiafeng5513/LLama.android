@@ -31,7 +31,7 @@ public:
 
 private:
     bool isVaidRow(int row) const;
-
+    void request(const QString &msg);
 private:
     //会话数据
     QList<QSharedPointer<TalkDataBasic>> talkList;

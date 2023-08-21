@@ -550,6 +550,7 @@ Window {
                                     if(text_area.text.length<1)
                                         return;
                                     talk_model.appendText("B","B",text_area.text+" ");
+
                                 }break;
                             case "audio":
                                 if(true){

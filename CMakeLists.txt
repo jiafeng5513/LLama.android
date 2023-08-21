@@ -8,6 +8,8 @@ find_package(Qt6 6.4 REQUIRED COMPONENTS Quick Widgets Core Multimedia)
 
 
 include_directories(src)
+include_directories(third-party/HTTPRequest/include)
+include_directories(third-party/json/single_include/nlohmann)
 
 file(GLOB CPP_HEADER_FILES "src/*.h")
 file(GLOB CPP_SRC_FILES "src/*.cpp")

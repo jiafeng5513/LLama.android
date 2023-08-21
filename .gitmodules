@@ -1,0 +1,6 @@
+[submodule "third-party/HTTPRequest"]
+	path = third-party/HTTPRequest
+	url = https://github.com/elnormous/HTTPRequest.git
+[submodule "third-party/json"]
+	path = third-party/json
+	url = https://github.com/nlohmann/json.git
