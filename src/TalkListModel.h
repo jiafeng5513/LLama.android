@@ -4,6 +4,7 @@
 #include <QAbstractListModel>
 #include "TalkListDefine.h"
 
+#include "ChatRequest.h"
 //聊天框ListView的model
 class TalkListModel : public QAbstractListModel
 {
@@ -33,10 +34,12 @@ public:
 
 private:
     bool isVaidRow(int row) const;
-    std::string request(const QString &msg);
+    ChatRequest * chatRequest_;
 private:
     //会话数据
     QList<QSharedPointer<TalkDataBasic>> talkList;
+public slots:
+    void onChatRequestFinish();
 };
 
 #endif // TALKLISTMODEL_H

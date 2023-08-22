@@ -18,6 +18,8 @@ using json = nlohmann::json;
 TalkListModel::TalkListModel(QObject *parent)
     : QAbstractListModel(parent)
 {
+    chatRequest_ = new ChatRequest(this);
+    connect(chatRequest_, SIGNAL(requestReturn()), this, SLOT(onChatRequestFinish()));
 }
 
 int TalkListModel::rowCount(const QModelIndex &parent) const
@@ -116,78 +118,6 @@ void TalkListModel::clearModel()
     endResetModel();
 }
 
-//std::string UTF8ToGB(const char* str)
-//{
-//    std::string result;
-//    WCHAR *strSrc;
-//    LPSTR szRes;
-
-//    //获得临时变量的大小
-//    int i = MultiByteToWideChar(CP_UTF8, 0, str, -1, NULL, 0);
-//    strSrc = new WCHAR[i+1];
-//    MultiByteToWideChar(CP_UTF8, 0, str, -1, strSrc, i);
-
-//    //获得临时变量的大小
-//    i = WideCharToMultiByte(CP_ACP, 0, strSrc, -1, NULL, 0, NULL, NULL);
-//    szRes = new CHAR[i+1];
-//    WideCharToMultiByte(CP_ACP, 0, strSrc, -1, szRes, i, NULL, NULL);
-
-//    result = szRes;
-//    delete []strSrc;
-//    delete []szRes;
-
-//    return result;
-//}
-
-void split(const std::string& s, std::vector<std::string>& sv, const char delim = ' ') {
-    sv.clear();
-    std::istringstream iss(s);
-    std::string temp;
-
-    while (std::getline(iss, temp, delim)) {
-        sv.emplace_back(std::move(temp));
-    }
-}
-
-std::string TalkListModel::request(const QString &msg){
-    // 以utf8读取文件，直接构造post请求，返回的response使用GBK解码显示
-    try
-    {
-        http::Request request{"http://127.0.0.1:8080/completion"};
-//
-        std::ifstream f("/home/anna/WorkSpace/celadon/LLama.android/prompt.json");
-        json data = json::parse(f);
-
-        std::stringstream sss;
-        sss << data;
-
-//        const std::string body = UTF8ToGB(sss.str().c_str());
-        const std::string body = sss.str();
-        const auto response = request.send("POST", body, {{"Content-Type", "application/json"}});
-        auto results = std::string{response.body.begin(), response.body.end()};
-
-        std::vector<std::string> sv;
-        split(results, sv, '\n');
-        std::stringstream ssr;
-//        std::regex word_regex("content: (\\w+),");
-        for (int i =0; i<sv.size();i++){
-            if (not sv[i].empty()){
-                auto payload = sv[i].substr(6, sv[i].length()-6);  //
-
-                json temp = json::parse(payload);
-                auto content = temp["content"].get<std::string>();
-//                auto content_gbk = UTF8ToGB(content.c_str());
-                ssr <<content;
-            }
-        }
-        return ssr.str();
-    }
-    catch (const std::exception& e)
-    {
-        std::cerr << "Request failed, error: " << e.what() << '\n';
-    }
-}
-
 void TalkListModel::appendText(const QString &user,
                                const QString &sender,
                                const QString &text)
@@ -229,13 +159,14 @@ void TalkListModel::appendAudio(const QString &user,
 void TalkListModel::sendPrompt(const QString &prompt){
     // human send
     appendText("B","B", prompt);
-
-    // request
-    std::cout<<"TalkListModel::sendPrompt: start request"<<std::endl;
-    auto answer = QString::fromStdString(this->request(prompt));
-    std::cout<<"TalkListModel::sendPrompt: finish request"<<std::endl;
+    // todo: sed prompt to request obj
+    this->chatRequest_->start();
+    // todo: set bot chat box to loading status
+//    std::cout<<"TalkListModel::sendPrompt: start request"<<std::endl;
+//    auto answer = QString::fromStdString(this->request(prompt));
+//    std::cout<<"TalkListModel::sendPrompt: finish request"<<std::endl;
     // bot send
-    appendText("A","B", answer);
+//    appendText("A","B", answer);
 }
 
 void TalkListModel::parseRow(int row)
@@ -267,4 +198,9 @@ void TalkListModel::parseRow(int row)
 bool TalkListModel::isVaidRow(int row) const
 {
     return (row>=0&&row<talkList.count());
+}
+
+void TalkListModel::onChatRequestFinish() {
+    auto answer = this->chatRequest_->getAnswer();
+    appendText("A","B", QString::fromStdString(answer));
 }
