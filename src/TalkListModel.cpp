@@ -116,28 +116,28 @@ void TalkListModel::clearModel()
     endResetModel();
 }
 
-std::string UTF8ToGB(const char* str)
-{
-    std::string result;
-    WCHAR *strSrc;
-    LPSTR szRes;
+//std::string UTF8ToGB(const char* str)
+//{
+//    std::string result;
+//    WCHAR *strSrc;
+//    LPSTR szRes;
 
-    //获得临时变量的大小
-    int i = MultiByteToWideChar(CP_UTF8, 0, str, -1, NULL, 0);
-    strSrc = new WCHAR[i+1];
-    MultiByteToWideChar(CP_UTF8, 0, str, -1, strSrc, i);
+//    //获得临时变量的大小
+//    int i = MultiByteToWideChar(CP_UTF8, 0, str, -1, NULL, 0);
+//    strSrc = new WCHAR[i+1];
+//    MultiByteToWideChar(CP_UTF8, 0, str, -1, strSrc, i);
 
-    //获得临时变量的大小
-    i = WideCharToMultiByte(CP_ACP, 0, strSrc, -1, NULL, 0, NULL, NULL);
-    szRes = new CHAR[i+1];
-    WideCharToMultiByte(CP_ACP, 0, strSrc, -1, szRes, i, NULL, NULL);
+//    //获得临时变量的大小
+//    i = WideCharToMultiByte(CP_ACP, 0, strSrc, -1, NULL, 0, NULL, NULL);
+//    szRes = new CHAR[i+1];
+//    WideCharToMultiByte(CP_ACP, 0, strSrc, -1, szRes, i, NULL, NULL);
 
-    result = szRes;
-    delete []strSrc;
-    delete []szRes;
+//    result = szRes;
+//    delete []strSrc;
+//    delete []szRes;
 
-    return result;
-}
+//    return result;
+//}
 
 void split(const std::string& s, std::vector<std::string>& sv, const char delim = ' ') {
     sv.clear();
@@ -149,13 +149,13 @@ void split(const std::string& s, std::vector<std::string>& sv, const char delim 
     }
 }
 
-void TalkListModel::request(const QString &msg){
+std::string TalkListModel::request(const QString &msg){
     // 以utf8读取文件，直接构造post请求，返回的response使用GBK解码显示
     try
     {
         http::Request request{"http://127.0.0.1:8080/completion"};
 //
-        std::ifstream f("F:/ProjectsSoftware/Artificial-Intelligence/LLama.android/prompt.json");
+        std::ifstream f("/home/anna/WorkSpace/celadon/LLama.android/prompt.json");
         json data = json::parse(f);
 
         std::stringstream sss;
@@ -176,11 +176,11 @@ void TalkListModel::request(const QString &msg){
 
                 json temp = json::parse(payload);
                 auto content = temp["content"].get<std::string>();
-                auto content_gbk = UTF8ToGB(content.c_str());
-                ssr <<content<< '\n';
+//                auto content_gbk = UTF8ToGB(content.c_str());
+                ssr <<content;
             }
         }
-
+        return ssr.str();
     }
     catch (const std::exception& e)
     {
@@ -199,10 +199,8 @@ void TalkListModel::appendText(const QString &user,
     talk_data->datetime=QDateTime::currentDateTime().toMSecsSinceEpoch();
     talk_data->type=TalkData::Text;
     talk_data->status=TalkData::ParseSuccess;
-    talk_data->text=text;
-    std::cout<<"TalkListModel::appendText: start request"<<std::endl;
-    this->request(user);
-    std::cout<<"TalkListModel::appendText: finish request"<<std::endl;
+    talk_data->text = text+" "; // 防止ui上出现异常的换行
+
     beginInsertRows(QModelIndex(),talkList.count(),talkList.count());
     talkList.push_back(QSharedPointer<TalkDataBasic>(talk_data));
     endInsertRows();
@@ -226,6 +224,18 @@ void TalkListModel::appendAudio(const QString &user,
     beginInsertRows(QModelIndex(),talkList.count(),talkList.count());
     talkList.push_back(QSharedPointer<TalkDataBasic>(talk_data));
     endInsertRows();
+}
+
+void TalkListModel::sendPrompt(const QString &prompt){
+    // human send
+    appendText("B","B", prompt);
+
+    // request
+    std::cout<<"TalkListModel::sendPrompt: start request"<<std::endl;
+    auto answer = QString::fromStdString(this->request(prompt));
+    std::cout<<"TalkListModel::sendPrompt: finish request"<<std::endl;
+    // bot send
+    appendText("A","B", answer);
 }
 
 void TalkListModel::parseRow(int row)

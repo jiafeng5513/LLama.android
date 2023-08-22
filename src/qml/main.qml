@@ -503,7 +503,7 @@ Window {
 
                 GridLayout {
                     id: grid
-                    columns: 4
+                    columns: 5
                     anchors.left: parent.left
                     anchors.bottom: parent.bottom
                     anchors.margins: 10
@@ -530,7 +530,7 @@ Window {
                                 if(true){ //M115
                                     if(text_area.text.length<1)
                                         return;
-                                    talk_model.appendText("B","A",text_area.text+" ");
+                                    talk_model.appendText("B","A",text_area.text);
                                 }break;
                             case "audio":
                                 if(true){
@@ -549,7 +549,7 @@ Window {
                                 if(true){ //M115
                                     if(text_area.text.length<1)
                                         return;
-                                    talk_model.appendText("B","B",text_area.text+" ");
+                                    talk_model.appendText("B","B",text_area.text);
 
                                 }break;
                             case "audio":
@@ -558,7 +558,28 @@ Window {
                                 }break;
                             }
                         }
-                    }//end Button
+                    }
+
+                    Button{ //chat
+                        anchors.margins: 10
+                        text: "Send Prompt"
+                        onClicked: {
+                            switch(send_type.currentText){
+                            case "text":
+                                if(true){ //M115
+                                    if(text_area.text.length<1)
+                                        return;
+                                    talk_model.sendPrompt(text_area.text);
+                                }break;
+                            case "audio":
+                                if(true){
+                                    talk_model.appendAudio("B","B");
+                                }break;
+                            }
+                        }
+                    }
+                    
+                    //end Button
                 }
             }
         }

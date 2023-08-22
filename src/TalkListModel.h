@@ -26,12 +26,14 @@ public:
     Q_INVOKABLE void appendAudio(const QString &user,
                                  const QString &sender);
 
+    Q_INVOKABLE void sendPrompt(const QString &prompt);
+
     //解析，如语音转文字，文档转换等
     Q_INVOKABLE void parseRow(int row);
 
 private:
     bool isVaidRow(int row) const;
-    void request(const QString &msg);
+    std::string request(const QString &msg);
 private:
     //会话数据
     QList<QSharedPointer<TalkDataBasic>> talkList;
