@@ -21,7 +21,7 @@ static const char *FileBaseName(const char *filename)
 
 int main(int argc, char *argv[])
 {
-    qDebug()<<FileBaseName(__FILE__)<<__FUNCTION__<<__LINE__;
+//    qDebug()<<FileBaseName(__FILE__)<<__FUNCTION__<<__LINE__;
 //    QCoreApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
 
     QGuiApplication app(argc, argv);

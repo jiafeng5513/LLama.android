@@ -6,6 +6,7 @@
 #define CHATBOT_CHATREQUEST_H
 
 #include <QThread>
+#include "json.hpp"
 
 class ChatRequest : public QThread {
     Q_OBJECT
@@ -21,7 +22,7 @@ private:
     std::string answer_;
     std::vector<std::string> prompts_;
     // todo: other params need to pass to server, need a delegate var here and getters/setters.
-
+    nlohmann::json requestPayload_;
     void split(const std::string& s, std::vector<std::string>& sv, const char delim = ' ');
 signals:
     void requestReturn();

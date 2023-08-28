@@ -1,11 +1,12 @@
 import QtQuick
 import QtQuick.Window
-//import QtQuick.Controls 2.12
+// import QtQuick.Controls 2.12
 import QtQuick.Controls
 import QtQuick.Layouts
 //import QtQuick.Controls 1.4 as Ctrl1
 import QtMultimedia
 import ChatBot 1.0
+
 
 Window {
     visible: true
@@ -391,10 +392,60 @@ Window {
                 anchors.horizontalCenter: parent.horizontalCenter
                 ColumnLayout {
                     anchors.fill: parent
-                    Button{ //清空
+                    // reset
+                    Button{
                         text: "Reset to default"
-                    }
-                }
+                    } // end of button reset
+                    GridLayout {
+                        columns: 3
+                        anchors.margins: 10
+                        // 数据类型
+                        ComboBox{
+                            id: send_type
+                            model: ["text", "audio"]
+                            currentIndex: 0
+                        } // end of ComboBox
+                        // A发送
+                        Button{
+                            anchors.margins: 10
+                            text: "Bot Send"
+                            onClicked: {
+                                switch(send_type.currentText){
+                                    case "text":
+                                        if(true){ //M115
+                                            if(text_area.text.length<1)
+                                                return;
+                                            talk_model.appendText("B","A",text_area.text);
+                                        }break;
+                                    case "audio":
+                                        if(true){
+                                            talk_model.appendAudio("B","A");
+                                        }break;
+                                }
+                            }
+                        } // end of button "Bot Send"
+                        // B发送
+                        Button{
+                            anchors.margins: 10
+                            text: "human Send"
+                            onClicked: {
+                                switch(send_type.currentText){
+                                    case "text":
+                                        if(true){ //M115
+                                            if(text_area.text.length<1)
+                                                return;
+                                            talk_model.appendText("B","B",text_area.text);
+
+                                        }break;
+                                    case "audio":
+                                        if(true){
+                                            talk_model.appendAudio("B","B");
+                                        }break;
+                                }
+                            }
+                        } // end of button "human Send"
+                    } // end of GridLayout contains 数据类型, A发送, B发送
+                } // end of GridLayout contains reset button and GridLayout
             }
         }
     }
@@ -503,60 +554,16 @@ Window {
 
                 GridLayout {
                     id: grid
-                    columns: 5
+                    columns: 2
                     anchors.left: parent.left
                     anchors.bottom: parent.bottom
                     anchors.margins: 10
 
-                    ComboBox{ //数据类型
-                        id: send_type
-                        model: ["text","audio"]
-                        currentIndex: 0
-                    }
                     Button{ //清空
                         text: "Clear"
                         onClicked: {
                             text_area.clear();
                             talk_model.clearModel();
-                        }
-                    }
-
-                    Button{ //A发送
-                        anchors.margins: 10
-                        text: "Bot Send"
-                        onClicked: {
-                            switch(send_type.currentText){
-                            case "text":
-                                if(true){ //M115
-                                    if(text_area.text.length<1)
-                                        return;
-                                    talk_model.appendText("B","A",text_area.text);
-                                }break;
-                            case "audio":
-                                if(true){
-                                    talk_model.appendAudio("B","A");
-                                }break;
-                            }
-                        }
-                    }
-
-                    Button{ //B发送
-                        anchors.margins: 10
-                        text: "human Send"
-                        onClicked: {
-                            switch(send_type.currentText){
-                            case "text":
-                                if(true){ //M115
-                                    if(text_area.text.length<1)
-                                        return;
-                                    talk_model.appendText("B","B",text_area.text);
-
-                                }break;
-                            case "audio":
-                                if(true){
-                                    talk_model.appendAudio("B","B");
-                                }break;
-                            }
                         }
                     }
 

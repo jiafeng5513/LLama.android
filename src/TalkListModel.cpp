@@ -159,7 +159,8 @@ void TalkListModel::appendAudio(const QString &user,
 void TalkListModel::sendPrompt(const QString &prompt){
     // human send
     appendText("B","B", prompt);
-    // todo: sed prompt to request obj
+
+    this->chatRequest_->sendPrompt(prompt.toStdString()); // sed prompt to request obj
     this->chatRequest_->start();
     // todo: set bot chat box to loading status
 //    std::cout<<"TalkListModel::sendPrompt: start request"<<std::endl;
