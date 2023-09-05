@@ -26,6 +26,7 @@ private:
     void split(const std::string& s, std::vector<std::string>& sv, const char delim = ' ');
 signals:
     void requestReturn();
+    void newResponse(QString msg);
 };
 
 

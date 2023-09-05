@@ -41,20 +41,15 @@ void ChatRequest::run() {
     // 以utf8读取文件，直接构造post请求，返回的response使用GBK解码显示
     try {
         http::Request request{"http://127.0.0.1:8080/completion"};
-//
-//        std::ifstream f("/home/anna/WorkSpace/celadon/LLama.android/prompt.json");
-//        json data = json::parse(f);
-
         std::stringstream sss;
         sss << requestPayload_;
 
 //        const std::string body = UTF8ToGB(sss.str().c_str());
         const std::string body = sss.str();
-        std::cout << body << std::endl;
         const auto response = request.send("POST", body, {{"Content-Type", "application/json"}});
 
         auto results = std::string{response.body.begin(), response.body.end()};
-
+//        std::cout << results << std::endl;
         std::vector<std::string> sv;
         split(results, sv, '\n');
         std::stringstream ssr;
@@ -67,6 +62,7 @@ void ChatRequest::run() {
                 auto content = temp["content"].get<std::string>();
 //                auto content_gbk = UTF8ToGB(content.c_str());
                 ssr << content;
+                emit newResponse(QString::fromStdString(content));
             }
         }
         this->answer_ = ssr.str();
