@@ -8,34 +8,70 @@
 #include <algorithm>
 #include <iostream>
 
+#include <QNetworkAccessManager>
+#include <QJsonObject>
+#include <QJsonDocument>
+#include <QNetworkReply>
+#include <QJsonArray>
+
 #include "json.hpp"
 #include "HTTPRequest.hpp"
 
 using json = nlohmann::json;
 
 ChatRequest::ChatRequest(QObject *parent) {
-    requestPayload_["prompt"] = "### Human: 那么什么是脉冲星呢"
-                                "### Assistant: 脉冲星是一种特殊的恒星，它具有非常强的磁场和辐射。"
-                                "### Human: 什么是恒星"
-                                "### Assistant:恒星是宇宙中发光的天体，它们通过核聚变产生能量并释放光线。"
-                                "### Human: 什么是核聚变"
-                                "### Assistant:核聚变是一种将原子核合并成更重元素的过程，这是恒星的核心产生的能量来源"
-                                "### Human: 如果恒星的核聚变停止了会发生什么"
-                                "### Assistant: 恒星的核聚变通常持续数百万年，直到恒星耗尽其核心中的氢和氦。一旦核聚变停止，恒星将逐渐冷却并变成红巨星或白矮星。";
+    requestPayload_["prompt"] = "";
     requestPayload_["temperature"] = 0.2;
     requestPayload_["top_k"] = 40;
     requestPayload_["top_p"] = 0.9;
     requestPayload_["n_keep"] = 36;
-    requestPayload_["n_predict"] = 256;
+    requestPayload_["n_predict"] = 2048;
     requestPayload_["stop"] = std::vector<std::string>({"### Human:"});
     requestPayload_["stream"] = true;
+
+    requestPayloadForQt_["prompt"] = "";
+    requestPayloadForQt_["temperature"] = 0.2;
+    requestPayloadForQt_["top_k"] = 40;
+    requestPayloadForQt_["top_p"] = 0.9;
+    requestPayloadForQt_["n_keep"] = 36;
+    requestPayloadForQt_["n_predict"] = 2048;
+    QJsonArray arr;
+    arr.append("### Human:");
+    requestPayloadForQt_["stop"] = arr;
+    requestPayloadForQt_["stream"] = true;
 }
 
 ChatRequest::~ChatRequest() {
 
 }
 
+
+
+
 void ChatRequest::run() {
+
+}
+
+void ChatRequest::sendPrompt(const std::string &prompt) {
+    requestPayload_["prompt"] = requestPayload_["prompt"].get<std::string>() + " ### Human: " + prompt + " ### Assistant: ";
+    requestPayloadForQt_["prompt"] = requestPayloadForQt_["prompt"].toString() + " ### Human: " + QString::fromStdString(prompt) + " ### Assistant: ";
+}
+
+std::string ChatRequest::getAnswer() {
+    return this->answer_.toStdString();
+}
+
+void ChatRequest::split(const std::string &s, std::vector<std::string> &sv, const char delim) {
+    sv.clear();
+    std::istringstream iss(s);
+    std::string temp;
+
+    while (std::getline(iss, temp, delim)) {
+        sv.emplace_back(std::move(temp));
+    }
+}
+
+void ChatRequest::requestWithHttp() {
     // todo: creat prompt.json with this->prompts
 
     // 以utf8读取文件，直接构造post请求，返回的response使用GBK解码显示
@@ -65,9 +101,9 @@ void ChatRequest::run() {
                 emit newResponse(QString::fromStdString(content));
             }
         }
-        this->answer_ = ssr.str();
+        this->answer_ = QString::fromStdString(ssr.str());
         // todo: 给payload 记录上下文
-        requestPayload_["prompt"] = requestPayload_["prompt"].get<std::string>() + this->answer_;
+        requestPayload_["prompt"] = requestPayload_["prompt"].get<std::string>() + this->answer_.toStdString();
     }
     catch (const std::exception &e) {
         std::cerr << "Request failed, error: " << e.what() << '\n';
@@ -76,22 +112,37 @@ void ChatRequest::run() {
     emit requestReturn();
 }
 
-void ChatRequest::sendPrompt(const std::string &prompt) {
-    requestPayload_["prompt"] = requestPayload_["prompt"].get<std::string>() + " ### Human: " + prompt + " ### Assistant: ";
-}
+void ChatRequest::requestWithQt() {
+    QNetworkAccessManager *mgr = new QNetworkAccessManager(this);
+    const QUrl url(QStringLiteral("http://127.0.0.1:8080/completion"));
+    QNetworkRequest request(url);
+    request.setHeader(QNetworkRequest::ContentTypeHeader, "application/json");
+    QJsonDocument doc(requestPayloadForQt_);
+    QByteArray data = doc.toJson();
+    std::cout<<data.toStdString()<<std::endl;
+    QNetworkReply *reply = mgr->post(request, data);
 
-std::string ChatRequest::getAnswer() {
-    return this->answer_;
-}
+    QObject::connect(reply, &QNetworkReply::readyRead, [=](){
+        if(reply->error() == QNetworkReply::NoError){
+            QString contents = QString::fromUtf8(reply->readAll());
+            QString payload =contents.replace("data: ","");
+            QJsonDocument doc = QJsonDocument::fromJson(payload.toUtf8());
+            QString content = doc.object()["content"].toString();
+            emit newResponse(content);
+            answer_.append(content);
+        }
+        else{
+            QString err = reply->errorString();
+            qDebug() << err;
+        }
+    });
 
-void ChatRequest::split(const std::string &s, std::vector<std::string> &sv, const char delim) {
-    sv.clear();
-    std::istringstream iss(s);
-    std::string temp;
-
-    while (std::getline(iss, temp, delim)) {
-        sv.emplace_back(std::move(temp));
-    }
+    QObject::connect(reply, &QNetworkReply::finished, [=](){
+        reply->deleteLater();
+        requestPayloadForQt_["prompt"] = requestPayloadForQt_["prompt"].toString() + this->answer_;
+        this->answer_.clear();
+        emit requestReturn();
+    });
 }
 
 //std::string UTF8ToGB(const char* str)

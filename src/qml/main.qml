@@ -585,16 +585,6 @@ Window {
                             }
                         }
                     }
-
-                    Button{ //chat
-                        anchors.margins: 10
-                        text: "test append"
-                        onClicked: {
-                            talk_model.appendTextStream(text_area.text);
-                        }
-                    }
-
-                    
                     //end Button
                 }
             }

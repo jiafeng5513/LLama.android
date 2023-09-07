@@ -2,7 +2,7 @@ import json
 import sseclient
 import requests
 
-url = 'http://127.0.0.1:8080/completion'
+url = 'http://localhost:8080/completion'
 
 data_context = {
     "prompt": "### Human: 什么是脉冲星 "
@@ -26,16 +26,17 @@ with sess.post(url, stream=True, headers=hearder_context, data=data_context_json
     for line in resp.iter_lines():
         if line:
             result_item = line.decode('utf-8').replace("data: ", "")
-            item_json_obj = json.loads(result_item)
-            if not item_json_obj['stop']:
-                item_content = item_json_obj['content']
-                print(item_content, end='')
-            else:
-                item_timings = item_json_obj['timings']
-                print('\n')
-                print(item_timings)
-                print("predicted_ms = {}".format(item_timings['predicted_ms']))
-                print("predicted_per_token_ms = {}".format(item_timings['predicted_per_token_ms']))
-                print("prompt_ms = {}".format(item_timings['prompt_ms']))
-                print("prompt_per_token_ms = {}".format(item_timings['prompt_per_token_ms']))
+            print(result_item)
+            # item_json_obj = json.loads(result_item)
+            # if not item_json_obj['stop']:
+            #     item_content = item_json_obj['content']
+            #     print(item_content, end='')
+            # else:
+            #     item_timings = item_json_obj['timings']
+            #     print('\n')
+            #     print(item_timings)
+            #     print("predicted_ms = {}".format(item_timings['predicted_ms']))
+            #     print("predicted_per_token_ms = {}".format(item_timings['predicted_per_token_ms']))
+            #     print("prompt_ms = {}".format(item_timings['prompt_ms']))
+            #     print("prompt_per_token_ms = {}".format(item_timings['prompt_per_token_ms']))
 

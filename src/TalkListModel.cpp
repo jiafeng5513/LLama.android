@@ -152,7 +152,8 @@ void TalkListModel::sendPrompt(const QString &prompt) {
     appendText("B", "B", prompt);
 
     this->chatRequest_->sendPrompt(prompt.toStdString()); // sed prompt to request obj
-    this->chatRequest_->start();
+//    this->chatRequest_->start();
+    this->chatRequest_->requestWithQt();
     // todo: set bot chat box to loading status
 //    std::cout<<"TalkListModel::sendPrompt: start request"<<std::endl;
 //    auto answer = QString::fromStdString(this->request(prompt));
@@ -204,8 +205,10 @@ void TalkListModel::onNewResponse(QString msg) {
     if (responseStatus_ == RESPONSE_STATUS::FIRST_TOKEN){
         appendText("A", "B", msg);
         responseStatus_ = RESPONSE_STATUS::STREAMING;
+        std::cout<< "first : "<<msg.toStdString()<<std::endl;
     } else{
         appTextToLastBubbles(msg);
+        std::cout<< "append : "<<msg.toStdString()<<std::endl;
     }
 }
 /// 响应requestReturn信号，翻转状态。注意，此处不需要维护prompt json, prompt json的历史记录由request类维护。
